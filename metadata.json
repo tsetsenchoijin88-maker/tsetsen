@@ -1,0 +1,8 @@
+{
+  "name": "Remix: Interactive Hero Section",
+  "description": "A modern, interactive hero section with desktop scrubbing background video, interactive navbar, typewriter effects, custom fonts, animations, and active state service pills.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
