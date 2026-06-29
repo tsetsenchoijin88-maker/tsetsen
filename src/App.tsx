@@ -8,6 +8,7 @@ import { HeroContent } from "./components/HeroContent";
 import { ServicePills } from "./components/ServicePills";
 import { BackgroundVideo } from "./components/BackgroundVideo";
 import { AudioPlayer } from "./components/AudioPlayer";
+import { AIChatBot } from "./components/AIChatBot";
 
 export default function App() {
   return (
@@ -37,6 +38,9 @@ export default function App() {
 
       {/* 4. Интерактив Хөгжим Тоглуулагч */}
       <AudioPlayer />
+
+      {/* 5. AI Chat Туслах */}
+      <AIChatBot />
     </div>
   );
 }
