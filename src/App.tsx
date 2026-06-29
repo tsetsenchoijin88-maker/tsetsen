@@ -9,6 +9,7 @@ import { ServicePills } from "./components/ServicePills";
 import { BackgroundVideo } from "./components/BackgroundVideo";
 import { AudioPlayer } from "./components/AudioPlayer";
 import { AIChatBot } from "./components/AIChatBot";
+import { LilPeepTribute } from "./components/LilPeepTribute";
 
 export default function App() {
   return (
@@ -30,6 +31,9 @@ export default function App() {
 
           {/* Сонгодог багц үйлчилгээнүүд */}
           <ServicePills />
+
+          {/* Шүтээн - Lil Peep хүндэтгэлийн хэсэг */}
+          <LilPeepTribute />
         </main>
       </div>
 

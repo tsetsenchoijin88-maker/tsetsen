@@ -5,7 +5,9 @@ export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const playMusic = () => {
-    const event = new CustomEvent("trigger-play-music");
+    const event = new CustomEvent("trigger-play-music", {
+      detail: { trackId: "star-shopping" }
+    });
     window.dispatchEvent(event);
   };
 

@@ -91,15 +91,22 @@ export function AudioPlayer() {
 
   // Гаднаас (Navbar гэх мэт) дуу тоглуулах дохиог хүлээн авах сонсогч
   useEffect(() => {
-    const handleTriggerPlay = () => {
+    const handleTriggerPlay = (e: Event) => {
+      const customEvent = e as CustomEvent<{ trackId?: string }>;
+      if (customEvent.detail && customEvent.detail.trackId) {
+        const foundIndex = tracks.findIndex((t) => t.id === customEvent.detail?.trackId);
+        if (foundIndex !== -1) {
+          setCurrentTrackIndex(foundIndex);
+        }
+      }
       setIsOpen(true);
       setIsPlaying(true);
     };
-    window.addEventListener("trigger-play-music", handleTriggerPlay);
+    window.addEventListener("trigger-play-music", handleTriggerPlay as EventListener);
     return () => {
-      window.removeEventListener("trigger-play-music", handleTriggerPlay);
+      window.removeEventListener("trigger-play-music", handleTriggerPlay as EventListener);
     };
-  }, []);
+  }, [tracks]);
 
   // Дуу ачаалах ба тоглуулах логик
   useEffect(() => {
