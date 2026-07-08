@@ -1,111 +1,68 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+
+const minecraftBg = "/src/assets/images/minecraft_girl_bg_1783486137279.jpg";
 
 export function BackgroundVideo() {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const prevXRef = useRef<number | null>(null);
-  const targetTimeRef = useRef<number>(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
 
-  // 1. Desktop mouse scrubbing логик
+  // Smooth mouse parallax effect for desktop
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
     const handleMouseMove = (e: MouseEvent) => {
-      // Хэрэв дэлгэцийн өргөн 1024-өөс бага бол хулганаар удирдах логикийг алсгана (ажиллуулахгүй)
       if (window.innerWidth < 1024) return;
 
-      const currentX = e.clientX;
+      const { innerWidth, innerHeight } = window;
+      // Calculate normalized mouse positions (-0.5 to 0.5)
+      const x = (e.clientX / innerWidth) - 0.5;
+      const y = (e.clientY / innerHeight) - 0.5;
 
-      if (prevXRef.current !== null && video.duration && !isNaN(video.duration)) {
-        const delta = currentX - prevXRef.current;
-        const deltaRatio = delta / window.innerWidth;
-        // Дэлгэцийн харьцаанаас хамаарч удирдах хугацааг тооцолно
-        const deltaTime = deltaRatio * 0.8 * video.duration;
-
-        let newTarget = targetTimeRef.current + deltaTime;
-
-        // Бичлэгийн эхлэл ба төгсгөл хооронд хязгаарлана (Clamp)
-        if (newTarget < 0) newTarget = 0;
-        if (newTarget > video.duration) newTarget = video.duration;
-
-        targetTimeRef.current = newTarget;
-        video.currentTime = newTarget;
-      }
-
-      prevXRef.current = currentX;
-    };
-
-    // Хулгана дэлгэц рүү орж ирэх үед огцом үсрэлт үүсгэхгүй байх зорилготой
-    const handleMouseEnter = (e: MouseEvent) => {
-      prevXRef.current = e.clientX;
-    };
-
-    const handleMouseLeave = () => {
-      prevXRef.current = null;
+      // Maximum offset in pixels
+      const maxOffset = 25;
+      
+      setOffset({
+        x: x * maxOffset,
+        y: y * maxOffset
+      });
     };
 
     window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseenter", handleMouseEnter);
-    window.addEventListener("mouseleave", handleMouseLeave);
-
-    // Бичлэг гүйж дууссаныг мэдэгдэх сонсогч (smooth tracking)
-    const handleSeeked = () => {
-      // Шаардлагын дагуу frame-to-frame smooth ажиллагааг хангах зорилгоор хоосон сонсогч холбов
-    };
-    video.addEventListener("seeked", handleSeeked);
-
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseenter", handleMouseEnter);
-      window.removeEventListener("mouseleave", handleMouseLeave);
-      video.removeEventListener("seeked", handleSeeked);
-    };
-  }, []);
-
-  // 2. Гар утасны Autoplay логик
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    const configureVideoState = () => {
-      if (window.innerWidth < 1024) {
-        video.autoplay = true;
-        video.loop = true;
-        video.play().catch((error) => {
-          console.warn("Хөтчийн аюулгүй байдлын тохиргооноос болж автоматаар тоглуулж чадсангүй:", error);
-        });
-      } else {
-        video.pause();
-      }
-    };
-
-    // Ачаалагдах үед нэг удаа шалгана
-    configureVideoState();
-
-    const handleResize = () => {
-      configureVideoState();
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
   return (
     <div
+      ref={containerRef}
       id="background-video-container"
-      className="order-last lg:order-none relative lg:absolute lg:inset-0 lg:z-0 overflow-hidden pointer-events-none w-full aspect-square md:aspect-video lg:aspect-auto lg:h-full bg-neutral-50 lg:bg-transparent"
+      className="order-last lg:order-none relative lg:absolute lg:inset-0 lg:z-0 overflow-hidden w-full h-[450px] sm:h-[520px] md:h-[600px] lg:h-full bg-[#0a0f0b]"
     >
-      <video
-        ref={videoRef}
-        id="mainframe-bg-video"
-        muted
-        playsInline
-        preload="auto"
-        className="w-full h-full object-cover object-right lg:object-right-bottom animate-fade-in"
-        src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260601_110537_3a579fa0-7bbc-4d94-9d25-0e816c7840f5.mp4"
-      />
+      {/* Glow highlight inside background container */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none z-10" />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-pink-500/5 rounded-full blur-[100px] pointer-events-none z-10" />
+
+      {/* Parallax Minecraft background image with deep zoom */}
+      <div
+        className="w-full h-full transition-transform duration-300 ease-out select-none"
+        style={{
+          transform: `scale(1.28) translate(${-offset.x}px, ${-offset.y}px)`,
+          backgroundImage: `url(${minecraftBg})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center center",
+        }}
+      >
+        <img
+          src={minecraftBg}
+          alt="Minecraft Tsetsen background"
+          className="sr-only"
+          referrerPolicy="no-referrer"
+        />
+      </div>
+
+      {/* Soft dark vignette overlay to make text content readable */}
+      <div className="absolute inset-0 bg-gradient-to-t from-[#0d120e] via-transparent to-[#0a0d0a]/80 pointer-events-none z-[1]" />
+      <div className="absolute inset-0 bg-black/20 pointer-events-none z-[1]" />
     </div>
   );
 }
+

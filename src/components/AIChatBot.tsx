@@ -112,6 +112,26 @@ export function AIChatBot() {
     }
   };
 
+  const handleSendMessageRef = useRef(handleSendMessage);
+  useEffect(() => {
+    handleSendMessageRef.current = handleSendMessage;
+  });
+
+  useEffect(() => {
+    const handleOpenWithHobby = (e: Event) => {
+      const customEvent = e as CustomEvent<{ hobby: string }>;
+      if (customEvent.detail && customEvent.detail.hobby) {
+        setIsOpen(true);
+        setUnreadCount(0);
+        handleSendMessageRef.current(`Цэцэн ээ, чиний "${customEvent.detail.hobby}" сонирхол үнэхээр сонирхолтой юмаа. Энэ талаар надад илүү ихийг ярьж өгөөч... mmm`);
+      }
+    };
+    window.addEventListener("chat-with-hobby", handleOpenWithHobby as EventListener);
+    return () => {
+      window.removeEventListener("chat-with-hobby", handleOpenWithHobby as EventListener);
+    };
+  }, []);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     handleSendMessage(inputValue);

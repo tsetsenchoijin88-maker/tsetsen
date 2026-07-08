@@ -1,125 +1,210 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Check, ArrowRight } from "lucide-react";
+import { 
+  Compass, 
+  Sparkles, 
+  MessageCircle, 
+  Heart, 
+  ChevronRight,
+  Tv,
+  Box,
+  Snowflake,
+  Music,
+  Award
+} from "lucide-react";
+
+interface Hobby {
+  id: string;
+  name: string;
+  emoji: string;
+  shortDesc: string;
+  fullDesc: string;
+  level: number; // Interest level 0-100
+  levelLabel: string;
+  color: string; // Tailwind accent color
+  bgGradient: string; // Card background color / subtle gradient
+  accentBg: string; // Badges or active pill bg
+  icon: React.ReactNode;
+}
 
 export function ServicePills() {
-  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
-  const availableInterests = ["Далай судлал 🌊", "Гар бөмбөг 🏐", "Цанаар гулгах ⛷️", "Lil Peep 🎵", "Lego тоглох 🧱"];
+  const [activeHobbyId, setActiveHobbyId] = useState<string | null>("oceanography");
 
-  const interestDetails: Record<string, string> = {
-    "Далай судлал 🌊": "Далайн гүн дэх нууцууд, нууцлагдмал амьтад болон экосистемийг судлах нь надад маш сонирхолтой санагддаг! Хязгааргүй далайн усыг судлах нь үнэхээр гайхалтай 🌊.",
-    "Гар бөмбөг 🏐": "Гар бөмбөг (Volleyball) тоглох нь багийн хамтын ажиллагааг сайжруулж, эрч хүч өгдөг миний хамгийн дуртай спорт! Найзуудтайгаа хамт тоглох, бөмбөг давуулах хамгийн гоё байдаг 🏐.",
-    "Цанаар гулгах ⛷️": "Өвлийн улиралд хамгийн гоё нь! Цасан талбай дээгүүр цанаар салхи сөрөн хурдтай гулгах бол миний хамгийн дуртай хоббинуудын нэг ⛷️.",
-    "Lil Peep 🎵": "Lil Peep бол миний хамгийн дуртай дуучин. Түүний дуунуудын өвөрмөц хэмнэл, өнгө аяс нь надад гүн төрөгдөл өгч, сонсох бүрд тайвшралыг мэдрүүлдэг 🎵.",
-    "Lego тоглох 🧱": "Янз бүрийн Lego-нуудыг угсарч, өөрийнхөө төсөөллөөр шинэ ертөнцийг бүтээх маш дуртай. Анхаарлаа төвлөрүүлж, бүтээлч байдлыг маань хөгжүүлдэг болохоор үнэхээр гоё хобби 🧱!"
+  const hobbies: Hobby[] = [
+    {
+      id: "oceanography",
+      name: "Далай судлал",
+      emoji: "🌊",
+      shortDesc: "Далайн хязгааргүй гүн, усан доорх нууцлаг амьтад",
+      fullDesc: "Далайн гүн дэх нууцууд, нууцлагдмал амьтад болон экосистемийг судлах нь надад маш сонирхолтой санагддаг! Миний туйлын мөрөөдөл бол ирээдүйд далай судлалын төв байгуулж, олон олон усны амьтдыг хамгаалж аврах байгаа юм 🐬.",
+      level: 100,
+      levelLabel: "Ирээдүйн мөрөөдөл",
+      color: "text-blue-500",
+      bgGradient: "from-blue-500/10 to-emerald-500/5",
+      accentBg: "bg-blue-500/10 text-blue-600 border-blue-500/20",
+      icon: <Compass className="w-5 h-5 text-blue-500" />
+    },
+    {
+      id: "lego",
+      name: "Lego тоглох",
+      emoji: "🧱",
+      shortDesc: "Төсөөллийн ертөнцийг өөрийн гараар угсарч бүтээх",
+      fullDesc: "Янз бүрийн Lego-нуудыг угсарч, өөрийнхөө төсөөллөөр шинэ ертөнцийг бүтээх маш дуртай. Анхаарлаа төвлөрүүлж, бүтээлч байдлыг маань хөгжүүлдэг болохоор үнэхээр гоё хобби 🧱! Далайн амьтдыг Lego-гоор угсрах бүр ч дуртай.",
+      level: 95,
+      levelLabel: "Бүтээлч сэтгэлгээ",
+      color: "text-amber-500",
+      bgGradient: "from-amber-500/10 to-yellow-500/5",
+      accentBg: "bg-amber-500/10 text-amber-600 border-amber-500/20",
+      icon: <Box className="w-5 h-5 text-amber-500" />
+    },
+    {
+      id: "music",
+      name: "Lil Peep сонсох",
+      emoji: "🎵",
+      shortDesc: "Гүн мэдрэмж төрүүлэгч аялгуу, дуунуудын цуглуулга",
+      fullDesc: "Lil Peep бол миний хамгийн дуртай дуучин. Түүний дуунуудын өвөрмөц хэмнэл, өнгө аяс нь надад гүн төрөгдөл өгч, сонсох бүрд тайвшралыг мэдрүүлдэг. Ганцаараа суухдаа түүний дууг сонсоод Lego угсрах дуртай 🥀.",
+      level: 90,
+      levelLabel: "Зүрх сэтгэлийн аялгуу",
+      color: "text-pink-500",
+      bgGradient: "from-pink-500/10 to-purple-500/5",
+      accentBg: "bg-pink-500/10 text-pink-600 border-pink-500/20",
+      icon: <Music className="w-5 h-5 text-pink-500" />
+    },
+    {
+      id: "volleyball",
+      name: "Гар бөмбөг",
+      emoji: "🏐",
+      shortDesc: "Багийн тоглолт, эрч хүчтэй хөдөлгөөнүүд",
+      fullDesc: "Гар бөмбөг (Volleyball) тоглох нь багийн хамтын ажиллагааг сайжруулж, эрч хүч өгдөг миний хамгийн дуртай спорт! Найзуудтайгаа хамт тоглох, бөмбөг давуулах хамгийн гоё байдаг 🏐.",
+      level: 85,
+      levelLabel: "Багийн хамтын ажиллагаа",
+      color: "text-orange-500",
+      bgGradient: "from-orange-500/10 to-red-500/5",
+      accentBg: "bg-orange-500/10 text-orange-600 border-orange-500/20",
+      icon: <Award className="w-5 h-5 text-orange-500" />
+    },
+    {
+      id: "skiing",
+      name: "Цанаар гулгах",
+      emoji: "⛷️",
+      shortDesc: "Өвлийн хүйтэнд салхи сөрөн хурдлах мэдрэмж",
+      fullDesc: "Өвлийн улиралд хамгийн гоё нь! Цасан талбай дээгүүр цанаар салхи сөрөн хурдтай гулгах бол миний хамгийн дуртай хоббинуудын нэг ⛷️. Байгалийн гоо үзэсгэлэнг мэдрэх гайхалтай арга шүү.",
+      level: 80,
+      levelLabel: "Адал явдал хайгч",
+      color: "text-cyan-500",
+      bgGradient: "from-cyan-500/10 to-blue-500/5",
+      accentBg: "bg-cyan-500/10 text-cyan-600 border-cyan-500/20",
+      icon: <Snowflake className="w-5 h-5 text-cyan-500" />
+    }
+  ];
+
+  const handleTalkWithAI = (hobbyName: string) => {
+    const event = new CustomEvent("chat-with-hobby", {
+      detail: { hobby: hobbyName }
+    });
+    window.dispatchEvent(event);
   };
 
-  // Товчлуур дарах үед сонгогдсон жагсаалтанд нэмэх эсвэл хасах
-  const handleToggleInterest = (interest: string) => {
-    setSelectedInterests((prev) =>
-      prev.includes(interest)
-        ? prev.filter((i) => i !== interest)
-        : [...prev, interest]
-    );
-  };
+  const selectedHobby = hobbies.find(h => h.id === activeHobbyId);
 
   return (
-    <div id="service-section" className="max-w-xl">
-      <h3 className="text-2xl font-bold tracking-tight mb-2 text-black">
-        Миний хобби, сонирхол
-      </h3>
-      <p className="opacity-85 text-[#738273] mb-8 text-sm sm:text-base">
-        Дэлгэрэнгүй уншихыг хүссэн сонирхлоо сонгоорой (олноор сонгож болно)
-      </p>
+    <div id="service-section" className="max-w-xl font-sans text-neutral-900 mt-10">
+      
+      {/* section Header */}
+      <div className="mb-6">
+        <span className="text-[11px] font-bold tracking-widest text-[#4D6D47] uppercase bg-[#EAECE9] px-2.5 py-1 rounded-full border border-neutral-200/50">
+          🌱 СОНИРХОЛ / Hobbies
+        </span>
+        <h3 className="text-2xl font-black tracking-tight mt-2.5 text-black flex items-center gap-1.5">
+          Миний хобби, сонирхол
+          <Sparkles className="w-5 h-5 text-emerald-600 animate-pulse" />
+        </h3>
+        <p className="text-xs text-neutral-500 mt-1">
+          Товчлуурууд дээр дарж дэлгэрэнгүйг уншина уу. AI ихэртэй ярилцах боломжтой 💬.
+        </p>
+      </div>
 
-      {/* Олон сонголттой товчлуурууд */}
-      <div className="flex flex-wrap gap-2.5 mb-8">
-        {availableInterests.map((interest) => {
-          const isActive = selectedInterests.includes(interest);
+      {/* Pills of Hobbies */}
+      <div className="flex flex-wrap gap-2.5 mb-5">
+        {hobbies.map((hobby) => {
+          const isActive = hobby.id === activeHobbyId;
           return (
             <motion.button
-              key={interest}
-              id={`pill-${interest.replace(/\s+/g, '-').toLowerCase()}`}
-              onClick={() => handleToggleInterest(interest)}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className={`inline-flex items-center text-sm md:text-base px-5 py-2.5 rounded-full transition-all duration-200 cursor-pointer font-medium select-none ${
+              key={hobby.id}
+              onClick={() => setActiveHobbyId(hobby.id)}
+              whileHover={{ y: -1.5, scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
+              className={`text-xs font-bold px-4 py-2.5 rounded-full border transition-all flex items-center gap-2 cursor-pointer ${
                 isActive
-                  ? "bg-[#1C2E1E] text-white shadow-md shadow-emerald-950/5 transform"
-                  : "bg-white text-[#1C2E1E] border border-[#F1F3F1] hover:bg-[#F1F3F1]/55 shadow-xs"
+                  ? "bg-[#1C2E1E] text-white border-[#1C2E1E] shadow-sm"
+                  : "bg-neutral-50 hover:bg-neutral-100 text-neutral-700 border-neutral-200"
               }`}
             >
-              <AnimatePresence mode="popLayout" initial={false}>
-                {isActive && (
-                  <motion.span
-                    initial={{ scale: 0, opacity: 0, width: 0 }}
-                    animate={{ scale: 1, opacity: 1, width: "auto" }}
-                    exit={{ scale: 0, opacity: 0, width: 0 }}
-                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                    className="inline-flex mr-2 shrink-0 items-center justify-center overflow-hidden"
-                  >
-                    <Check className="w-4 h-4 text-white" />
-                  </motion.span>
-                )}
-              </AnimatePresence>
-              {interest}
+              <span className="text-sm select-none">{hobby.emoji}</span>
+              <span>{hobby.name}</span>
             </motion.button>
           );
         })}
       </div>
 
-      {/* Сонголтын хариу үйлдэл үзүүлэх баннер болон тайлбар картууд */}
+      {/* Dynamic Detail Panel */}
       <AnimatePresence mode="wait">
-        {selectedInterests.length === 0 ? (
+        {selectedHobby && (
           <motion.div
-            key="empty-state"
-            initial={{ opacity: 0, y: -4 }}
-            animate={{ opacity: 0.5, y: 0 }}
-            exit={{ opacity: 0, y: -4 }}
-            transition={{ duration: 0.2 }}
-            className="text-xs text-neutral-500 italic pl-1 py-1"
+            key={selectedHobby.id}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -15 }}
+            transition={{ duration: 0.35, ease: "easeOut" }}
+            className="bg-white border border-[#EAECE9] rounded-3xl p-5 shadow-xs relative overflow-hidden"
           >
-            Дээрх сонирхлуудаас дарж тайлбарыг нээнэ үү.
-          </motion.div>
-        ) : (
-          <motion.div
-            key="active-state"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ type: "spring", stiffness: 280, damping: 26 }}
-            className="overflow-hidden w-full space-y-3"
-          >
-            {/* Сонгосон сонирхлуудын дэлгэрэнгүй жагсаалт */}
-            {selectedInterests.map((interest) => (
-              <motion.div
-                key={`detail-${interest}`}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 10 }}
-                className="bg-[#FAFBF9] border border-[#EAECE9] rounded-2xl p-4 sm:p-5 flex flex-col gap-2 shadow-xs"
-              >
-                <div className="text-xs text-[#4D6D47] tracking-wider uppercase font-bold">
-                  {interest}
-                </div>
-                <p className="text-sm md:text-base text-neutral-800 leading-relaxed font-normal">
-                  {interestDetails[interest]}
-                </p>
-              </motion.div>
-            ))}
+            {/* Ambient subtle glow background */}
+            <div className={`absolute -right-16 -top-16 w-32 h-32 bg-gradient-to-b ${selectedHobby.bgGradient} rounded-full blur-2xl opacity-60 -z-10`} />
 
-            <div className="bg-[#1C2E1E] text-white rounded-2xl p-4 sm:p-5 mt-4 flex flex-row items-center justify-between gap-4 shadow-sm">
-              <span className="text-xs sm:text-sm font-medium tracking-wide">
-                Цэцэнтэй хамт сонирхлоо хуваалцах уу? 🌊
+            {/* Header detail */}
+            <div className="flex flex-wrap items-center justify-between gap-2.5 mb-4 pb-3 border-b border-neutral-100">
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">{selectedHobby.emoji}</span>
+                <div>
+                  <h4 className="font-bold text-base text-neutral-900">{selectedHobby.name}</h4>
+                  <span className={`inline-block text-[9px] font-bold uppercase tracking-widest border px-1.5 py-0.5 rounded-md mt-0.5 ${selectedHobby.accentBg}`}>
+                    {selectedHobby.levelLabel}
+                  </span>
+                </div>
+              </div>
+
+              {/* Interest meter */}
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] text-neutral-400 font-mono font-bold">СОНИРХОЛ:</span>
+                <div className="w-16 h-2 bg-neutral-100 rounded-full overflow-hidden relative border border-neutral-200/50">
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: `${selectedHobby.level}%` }}
+                    transition={{ delay: 0.2, duration: 0.8 }}
+                    className="absolute top-0 left-0 bottom-0 bg-[#1C2E1E] rounded-full"
+                  />
+                </div>
+                <span className="text-[10px] font-black text-neutral-800 font-mono">{selectedHobby.level}%</span>
+              </div>
+            </div>
+
+            {/* Content text */}
+            <p className="text-sm text-neutral-700 leading-relaxed font-normal mb-5 whitespace-pre-wrap">
+              {selectedHobby.fullDesc}
+            </p>
+
+            {/* Action panel inside card */}
+            <div className="flex items-center justify-between gap-3 bg-[#FAFBF9] border border-neutral-100 rounded-2xl p-3.5">
+              <span className="text-xs text-neutral-500 font-medium">
+                Цэцэнтэй хамт энэ сонирхлоор ярилцах уу?
               </span>
               <button
-                onClick={() =>
-                  alert(`Цэцэнтэй холбогдох хүсэлт илгээгдлээ! Сонгосон хоббинууд: ${selectedInterests.join(", ")}`)
-                }
-                className="inline-flex items-center gap-1.5 text-[#1C2E1E] bg-white hover:bg-[#FAFBF9] active:scale-95 text-xs font-bold uppercase tracking-wider transition-all py-2 px-3.5 rounded-xl shrink-0 cursor-pointer"
+                onClick={() => handleTalkWithAI(selectedHobby.name)}
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-white bg-[#1C2E1E] hover:bg-neutral-800 active:scale-95 transition-all py-2 px-3.5 rounded-xl cursor-pointer shadow-sm shrink-0"
               >
-                <span>Холбогдох</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                <MessageCircle className="w-3.5 h-3.5" />
+                <span>Ярилцах</span>
+                <ChevronRight className="w-3 h-3" />
               </button>
             </div>
           </motion.div>

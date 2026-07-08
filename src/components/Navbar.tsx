@@ -37,6 +37,16 @@ export function Navbar() {
           <a href="#openings" className="hover:opacity-60 transition-opacity">Openings</a>
           <span className="opacity-40">,&nbsp;</span>
           <a href="#shop" className="hover:opacity-60 transition-opacity">Shop</a>
+          <span className="opacity-40">,&nbsp;</span>
+          <a
+            href="https://shiveech.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:opacity-60 transition-opacity flex items-center gap-1 font-medium text-pink-600"
+            title="Typeracer тоглох"
+          >
+            ⌨️ Typeracer
+          </a>
         </nav>
 
         {/* Баруун талын "Get in touch" товч / холбоос */}
@@ -48,12 +58,6 @@ export function Navbar() {
             <Music className="w-4 h-4 text-pink-400 animate-bounce" />
             <span>Lil Peep - Star Shopping ⭐</span>
           </button>
-          <a
-            href="#contact"
-            className="text-[23px] text-black underline underline-offset-2 hover:opacity-60 transition-opacity"
-          >
-            Get in touch
-          </a>
         </div>
 
         {/* Гар утас болон жижиг дэлгэцэнд зориулсан Hamburger товчлуур */}
@@ -111,13 +115,14 @@ export function Navbar() {
               {link}
             </a>
           ))}
-          <div className="border-t border-neutral-100 my-4 w-24 mx-auto" />
           <a
-            href="#contact"
+            href="https://shiveech.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
             onClick={() => setIsMobileMenuOpen(false)}
-            className="text-3xl font-medium text-black underline underline-offset-4 hover:opacity-100/60 transition-opacity"
+            className="text-3xl font-medium text-pink-600 hover:opacity-60 transition-opacity flex items-center justify-center gap-1.5"
           >
-            Get in touch
+            ⌨️ Typeracer
           </a>
         </div>
       </div>
